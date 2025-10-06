@@ -1,14 +1,17 @@
 package org.example.tests;
+import org.example.extensions.LoggingExtension;
 import org.example.pages.HomePage;
 import org.example.pages.LoginPage;
 import org.example.utils.WindowsUtils;
 import org.junit.jupiter.api.*;
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
 import org.junit.jupiter.params.provider.CsvSource;
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
+@ExtendWith(LoggingExtension.class)
 public class LoginTest extends TestRunner {
     private static LoginPage loginPage;
     private static HomePage homePage;
