@@ -2,6 +2,7 @@ package org.example.tests;
 import org.example.extensions.LoggingExtension;
 import org.example.pages.HomePage;
 import org.example.pages.LoginPage;
+import org.example.testdata.UserRepository;
 import org.example.utils.WindowsUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
@@ -17,8 +18,8 @@ public class LoginTest extends TestRunner {
     private static HomePage homePage;
     private static WindowsUtils windowsUtils;
 
-    String TEST_EMAIL = System.getenv("TEST_EMAIL");
-    String TEST_PASSWORD = System.getenv("TEST_PASSWORD");
+    //String TEST_EMAIL = System.getenv("TEST_EMAIL");
+    //String TEST_PASSWORD = System.getenv("TEST_PASSWORD");
 
     @BeforeEach
     public void initPageElements() {
@@ -169,7 +170,7 @@ public class LoginTest extends TestRunner {
     @Test
     public void loginWithValidData() {
         homePage.openLoginForm()
-                .loginAs(TEST_EMAIL, TEST_PASSWORD);
+                .loginAs(UserRepository.getValid());
         assertThat(homePage.isLoggedIn(), is(true));
         homePage.signOut();
     }
