@@ -1,5 +1,6 @@
 package org.example.pages;
 
+import org.example.testdata.UsersData;
 import org.example.utils.JsUtils;
 import org.example.utils.WaitUtils;
 import org.openqa.selenium.WebDriver;
@@ -154,9 +155,9 @@ public class LoginPage {
 
     public boolean isSubmitBtnActive() { return signInSubmitButton.getAttribute("disabled") != null; }
 
-    public void loginAs(String email, String password) {
-        fillEmail(email);
-        fillPassword(password);
+    public void loginAs(UsersData user) {
+        fillEmail(user.getEmail());
+        fillPassword(user.getPassword());
         blurEmailTrigger();
         blurPasswordTrigger();
         clickSubmit(LoginPage.class);
