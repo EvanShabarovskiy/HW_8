@@ -3,8 +3,8 @@ import org.junit.jupiter.params.provider.Arguments;
 import java.util.stream.Stream;
 import static org.example.testdata.InvalidData.*;
 
-public class DataProvider {
-    private DataProvider(){}
+public class InvalidDataProvider {
+    private InvalidDataProvider(){}
 
     // Dynamically matching incorrect data with error messages
 

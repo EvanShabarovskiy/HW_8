@@ -2,8 +2,7 @@ package org.example.testdata;
 
 public final class UserRepository {
 
-    private UserRepository() {
-    }
+    private UserRepository() {}
 
     public static UsersData getDefault() {
         return  getValid();
@@ -15,6 +14,12 @@ public final class UserRepository {
                 .setPassword("!Testtestovich611!")
                 //.setPassword(System.getenv("USER_PASSWORD"))
                 .setUsername("Grisha");
+    }
+
+    public static UsersData getUnregistered() {
+        return new UsersData()
+                .setEmail("someemailone@gmail.com")
+                .setPassword("!Passwordone212");
     }
 
     /*

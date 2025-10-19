@@ -1,32 +1,26 @@
 package org.example.tests;
 import org.example.extensions.LoggingExtension;
-import org.example.pages.HomePage;
 import org.example.pages.LoginPage;
+import org.example.testdata.StaticTextUA;
 import org.example.testdata.UserRepository;
 import org.example.utils.WindowsUtils;
 import org.junit.jupiter.api.*;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.junit.jupiter.params.ParameterizedTest;
-import org.junit.jupiter.params.provider.CsvSource;
+import org.junit.jupiter.params.provider.MethodSource;
+
+import java.util.Objects;
+
 import static org.hamcrest.CoreMatchers.is;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.containsString;
 
+@TestInstance(TestInstance.Lifecycle.PER_CLASS)
 @ExtendWith(LoggingExtension.class)
 public class LoginTest extends TestRunner {
-    private static LoginPage loginPage;
-    private static HomePage homePage;
-    private static WindowsUtils windowsUtils;
 
     //String TEST_EMAIL = System.getenv("TEST_EMAIL");
     //String TEST_PASSWORD = System.getenv("TEST_PASSWORD");
-
-    @BeforeEach
-    public void initPageElements() {
-        loginPage = new LoginPage(driver);
-        homePage = new HomePage(driver);
-        windowsUtils = new WindowsUtils(driver);
-    }
 
     @Test
     public void closeFormBtn(){
@@ -36,7 +30,7 @@ public class LoginTest extends TestRunner {
 
     @Test
     public void verifyTitle() {
-        assertThat(loginPage.getPageTitle(), is("GreenCity — Формуй екологічні звички сьогодні"));
+        assertThat(loginPage.getPageTitle(), is(StaticTextUA.SignInPage.GREEN_CITY_TITLE));
     }
 
     @Test
@@ -44,21 +38,18 @@ public class LoginTest extends TestRunner {
         homePage.openLoginForm();
         assertThat(loginPage.isLeftSidePictureVisible(), is(true));
         assertThat(loginPage.isGoogleSignInButtonVisible(), is(true));
-        assertThat(loginPage.getWelcomeText(), is("З поверненням!"));
-        assertThat(loginPage.getSignInDetailsText(), is("Будь ласка, внесіть свої дані для входу."));
-        assertThat(loginPage.getEmailLabelText(), is("Електронна пошта"));
-        assertThat(loginPage.getPasswordLabelText(), is("Пароль"));
-        assertThat(loginPage.getDontHaveAccText(), is("Досі немає аккаунту?\nЗареєструватися"));
-        assertThat(loginPage.getForgotPassLinkText(), is("Забули пароль?"));
+        assertThat(loginPage.getWelcomeText(), is(StaticTextUA.SignInPage.WELCOME_TEXT));
+        assertThat(loginPage.getSignInDetailsText(), is(StaticTextUA.SignInPage.DETAILS_TEXT));
+        assertThat(loginPage.getEmailLabelText(), is(StaticTextUA.SignInPage.EMAIL_LABEL_TEXT));
+        assertThat(loginPage.getPasswordLabelText(), is(StaticTextUA.SignInPage.PASSWORD_LABEL_TEXT));
+        assertThat(loginPage.getDontHaveAccText(), is(StaticTextUA.SignInPage.DONT_HAVE_ACC_TEXT));
+        assertThat(loginPage.getForgotPassLinkText(), is(StaticTextUA.SignInPage.FORGOT_PASS_LINK_TEXT));
         assertThat(loginPage.isSignUpBtnVisible(), is(true));
         loginPage.closeLoginForm();
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "samplestest@greencity.com",
-            "anotheruser@greencity.com"
-    })
+    @MethodSource("org.example.testdata.ValidData#validEmailsStream")
     public void checkEmailInput(String email) {
         homePage.openLoginForm()
                 .fillEmail(email);
@@ -67,10 +58,7 @@ public class LoginTest extends TestRunner {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "weyt3$Guew^",
-            "anotherpassword"
-    })
+    @MethodSource("org.example.testdata.ValidData#validPasswordsStream")
     public void checkPasswordInput(String password) {
         homePage.openLoginForm()
                 .fillPassword(password);
@@ -79,25 +67,20 @@ public class LoginTest extends TestRunner {
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "'samplestesgreencity.com', 'Перевірте, чи правильно вказано вашу адресу електронної пошти'",
-            "'', 'Введіть пошту.'"
-    })
-    public void emailIsNotValid(String email, String message) {
-        homePage.openLoginForm()
-                .fillEmail(email)
-                .blurEmailTrigger();
-        assertThat(loginPage.getEmailError(), is(message));
-        assertThat(loginPage.isSubmitBtnActive(), is(true));
+    @MethodSource("org.example.testdata.InvalidData#invalidEmailsStream")
+    public void emailIsNotValid(String email) {
+        if(!Objects.equals(email, "")) {
+            homePage.openLoginForm()
+                    .fillEmail(email)
+                    .blurEmailTrigger();
+            assertThat(loginPage.getEmailError(), is(StaticTextUA.SignInPage.ERROR_EMAIL_TEXT));
+            assertThat(loginPage.isSubmitBtnActive(), is(false));
+        } else { assertThat(loginPage.getEmailError(), is(StaticTextUA.SignInPage.EMPTY_EMAIL_ERROR)); }
         loginPage.closeLoginForm();
     }
 
     @ParameterizedTest
-    @CsvSource({
-            "'passwordmorethenthwentysymbols', 'Пароль не може містити більше 20 символів.'",
-            "'', Це поле є обов'язковим",
-            "'shortps', 'Пароль повинен мати від 8 до 20 символів без пробілів, містити хоча б один символ латинського алфавіту верхнього (A-Z) та нижнього регістру (a-z), число (0-9) та спеціальний символ (~`!@#$%^&*()+=_-{}[]|:;”’?/<>,.)'"
-    })
+    @MethodSource("org.example.testdata.InvalidDataProvider#invalidPasswordsWithErrors")
     public void passwordIsNotValid(String pass, String message) {
         homePage.openLoginForm()
                 .fillPassword(pass)
@@ -106,20 +89,16 @@ public class LoginTest extends TestRunner {
         assertThat(loginPage.isSubmitBtnActive(), is(true));
         loginPage.closeLoginForm();
     }
-    @ParameterizedTest
-    @CsvSource({
-            "someemailone@gmail.com, passwordone",
-            "someemailtwo@gmail.com, passwordtwo",
-            "someemailthree@gmail.com, passwordthree"
-    })
-    public void incorrectDataError(String email, String pass){
+
+    @Test
+    public void UnregisteredUserCheck(){
         homePage.openLoginForm()
-                .fillEmail(email)
-                .fillPassword(pass)
+                .fillEmail(UserRepository.getUnregistered().getEmail())
+                .fillPassword(UserRepository.getUnregistered().getPassword())
                 .blurEmailTrigger()
                 .blurPasswordTrigger()
                 .clickSubmit(LoginPage.class);
-        assertThat(loginPage.getGeneralError(), is("Введено невірний email або пароль"));
+        assertThat(loginPage.getGeneralError(), is (StaticTextUA.SignInPage.INCORRECT_EMAIL_PASS_ERROR));
         loginPage.closeLoginForm();
     }
 
@@ -148,6 +127,7 @@ public class LoginTest extends TestRunner {
         loginPage.closeLoginForm();
     }
 
+    // TODO upgrade
     @Test
     public void loginWithGoogleTest() {
         homePage.openLoginForm()
@@ -175,8 +155,5 @@ public class LoginTest extends TestRunner {
         homePage.signOut();
     }
 
-    @AfterAll
-    public static void tearDown() {
-        driver.quit();
-    }
+
 }
