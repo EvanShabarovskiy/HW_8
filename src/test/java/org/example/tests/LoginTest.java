@@ -1,6 +1,7 @@
 package org.example.tests;
 import org.example.extensions.LoggingExtension;
 import org.example.pages.LoginPage;
+import org.example.runners.TestRunner;
 import org.example.testdata.StaticTextUA;
 import org.example.testdata.UserRepository;
 import org.example.utils.WindowsUtils;
@@ -24,17 +25,22 @@ public class LoginTest extends TestRunner {
 
     @Test
     public void closeFormBtn(){
+        System.out.println(">>>>>>>>>>> Running on thread: " + Thread.currentThread().getId());
         homePage.openLoginForm()
                  .closeLoginForm();
+        System.out.println(">>> Running on thread: " + Thread.currentThread().getId());
     }
 
     @Test
     public void verifyTitle() {
+        System.out.println(">>>>>>>>>>> Running on thread: " + Thread.currentThread().getId());
         assertThat(loginPage.getPageTitle(), is(StaticTextUA.SignInPage.GREEN_CITY_TITLE));
+        System.out.println(">>> Running on thread: " + Thread.currentThread().getId());
     }
 
     @Test
     public void verifyStaticElements() {
+        System.out.println(">>>>>>>>>>> Running on thread: " + Thread.currentThread().getId());
         homePage.openLoginForm();
         assertThat(loginPage.isLeftSidePictureVisible(), is(true));
         assertThat(loginPage.isGoogleSignInButtonVisible(), is(true));
@@ -51,6 +57,7 @@ public class LoginTest extends TestRunner {
     @ParameterizedTest
     @MethodSource("org.example.testdata.ValidData#validEmailsStream")
     public void checkEmailInput(String email) {
+        System.out.println(">>>>>>>>>>> Running on thread: " + Thread.currentThread().getId());
         homePage.openLoginForm()
                 .fillEmail(email);
         assertThat(loginPage.getEmailValue(), is(email));
@@ -60,6 +67,7 @@ public class LoginTest extends TestRunner {
     @ParameterizedTest
     @MethodSource("org.example.testdata.ValidData#validPasswordsStream")
     public void checkPasswordInput(String password) {
+        System.out.println(">>>>>>>>>>> Running on thread: " + Thread.currentThread().getId());
         homePage.openLoginForm()
                 .fillPassword(password);
         assertThat(loginPage.getPasswordValue(), is(password));
@@ -69,6 +77,7 @@ public class LoginTest extends TestRunner {
     @ParameterizedTest
     @MethodSource("org.example.testdata.InvalidData#invalidEmailsStream")
     public void emailIsNotValid(String email) {
+        System.out.println(">>>>>>>>>>> Running on thread: " + Thread.currentThread().getId());
         if(!Objects.equals(email, "")) {
             homePage.openLoginForm()
                     .fillEmail(email)
@@ -82,6 +91,7 @@ public class LoginTest extends TestRunner {
     @ParameterizedTest
     @MethodSource("org.example.testdata.InvalidDataProvider#invalidPasswordsWithErrors")
     public void passwordIsNotValid(String pass, String message) {
+        System.out.println(">>>>>>>>>>> Running on thread: " + Thread.currentThread().getId());
         homePage.openLoginForm()
                 .fillPassword(pass)
                 .blurPasswordTrigger();

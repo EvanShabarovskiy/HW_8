@@ -32,6 +32,13 @@
             <scope>test</scope>
         </dependency>
 
+        <dependency>
+            <groupId>org.junit.platform</groupId>
+            <artifactId>junit-platform-launcher</artifactId>
+            <version>6.0.0</version>
+            <scope>test</scope>
+        </dependency>
+
         <!-- WebDriverManager -->
         <dependency>
             <groupId>io.github.bonigarcia</groupId>
@@ -98,17 +105,22 @@
                 </configuration>
             </plugin>
 
-            <plugin>
-                <groupId>org.apache.maven.plugins</groupId>
-                <artifactId>maven-surefire-plugin</artifactId>
-                <version>3.5.4</version>
-                <!--                <configuration>-->
-                <!--                    <parallel>both</parallel>-->
-                <!--                    <threadCount>4</threadCount>-->
-                <!--                    <perCoreThreadCount>false</perCoreThreadCount>-->
-                <!--                    <reuseForks>true</reuseForks>-->
-                <!--                </configuration>-->
-            </plugin>
+<!--            <plugin>-->
+<!--                <groupId>org.apache.maven.plugins</groupId>-->
+<!--                <artifactId>maven-surefire-plugin</artifactId>-->
+<!--                <version>3.5.4</version>-->
+<!--                <configuration>-->
+<!--                    <parallel>classesAndMethods</parallel>-->
+<!--                    <threadCount>4</threadCount>-->
+<!--                    <perCoreThreadCount>false</perCoreThreadCount>-->
+<!--                    <reuseForks>true</reuseForks>-->
+<!--                    <includes>-->
+<!--                        <include>**/*Test.java</include>-->
+<!--                    </includes>-->
+<!--                    &lt;!&ndash; Optional: щоб JUnit 5 обробляв паралельність &ndash;&gt;-->
+<!--                    <useModulePath>false</useModulePath>-->
+<!--                </configuration>-->
+<!--            </plugin>-->
         </plugins>
     </build>
 

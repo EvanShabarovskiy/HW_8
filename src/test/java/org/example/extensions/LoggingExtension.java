@@ -14,10 +14,10 @@ public class LoggingExtension implements BeforeTestExecutionCallback, AfterTestE
     @Override
     public void beforeTestExecution(ExtensionContext context) {
         startTime = System.currentTimeMillis();
-        String testName = context.getDisplayName();
+        String methodName = context.getRequiredTestMethod().getName();
         String className = context.getRequiredTestClass().getSimpleName();
         logger.info("🚀 Starting test: {}.{}  [Thread ID: {}]",
-                className, testName, Thread.currentThread().getId());
+                className, methodName, Thread.currentThread().getId());
     }
 
     @Override

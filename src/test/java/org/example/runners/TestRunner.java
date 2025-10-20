@@ -1,4 +1,4 @@
-package org.example.tests;
+package org.example.runners;
 
 import org.example.pages.HomePage;
 import org.example.pages.LoginPage;
